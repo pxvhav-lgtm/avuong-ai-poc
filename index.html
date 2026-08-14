@@ -9,137 +9,821 @@
 
 <style>
 :root{
-  --bg:#edf3fb; --panel:#fff; --text:#102033; --muted:#64748b; --line:#d9e2ef;
-  --blue:#0f5bd7; --blue-dark:#0b469f; --blue-soft:#eaf2ff;
-  --green:#12805c; --green-soft:#e8f7f0;
-  --amber:#a85b00; --amber-soft:#fff3dd;
-  --violet:#6d45bd; --violet-soft:#f1ebff;
-  --gray-soft:#f1f5f9; --red:#b42318; --red-soft:#fff0ef;
-  --shadow:0 10px 30px rgba(16,37,71,.08); --app-max:1680px;
+  --bg:#eef3f8;
+  --panel:#ffffff;
+  --text:#142033;
+  --muted:#6b7b91;
+  --line:#dbe4ef;
+
+  --blue:#0f5bd7;
+  --blue-dark:#0b469f;
+  --blue-soft:#eaf2ff;
+
+  --green:#12805c;
+  --green-soft:#e8f7f0;
+
+  --amber:#a85b00;
+  --amber-soft:#fff3dd;
+
+  --violet:#6d45bd;
+  --violet-soft:#f1ebff;
+
+  --gray-soft:#f1f5f9;
+  --red:#b42318;
+  --red-soft:#fff0ef;
+
+  --shadow:0 12px 32px rgba(21,43,78,.08);
+  --app-max:1540px;
 }
+
 *{box-sizing:border-box}
-html,body{height:100%;margin:0}
-body{overflow:hidden;font-family:Inter,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--text)}
-button,input,textarea{font:inherit}
+
+html,body{
+  height:100%;
+  margin:0;
+}
+
+body{
+  overflow:hidden;
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+button,input,textarea{
+  font:inherit;
+}
+
+/* ============================================================
+   APP LAYOUT
+   Header + Chat + Composer luôn nằm trong 1 viewport
+   Chỉ vùng chat cuộn
+   ============================================================ */
+
 .app{
-  height:100dvh; display:grid; grid-template-rows:auto 1fr auto; gap:10px;
-  width:min(calc(100% - 24px),var(--app-max)); margin:0 auto; padding:10px 0;
+  width:min(calc(100% - 36px),var(--app-max));
+  height:100dvh;
+  margin:0 auto;
+  padding:10px 0;
+  display:grid;
+  grid-template-rows:auto 1fr auto;
+  gap:10px;
 }
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
 .header{
-  min-height:72px; background:radial-gradient(circle at right top,rgba(255,255,255,.14),transparent 38%),linear-gradient(135deg,#0d2d5e,#184f91);
-  color:#fff; border-radius:20px; padding:14px 18px; box-shadow:var(--shadow);
-  display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+  min-height:72px;
+  padding:13px 18px;
+  border-radius:20px;
+  color:#fff;
+  background:
+    radial-gradient(circle at right top,rgba(255,255,255,.12),transparent 34%),
+    linear-gradient(135deg,#12396d,#1f5ba8);
+  box-shadow:var(--shadow);
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  flex-wrap:wrap;
 }
-.header h1{margin:0 0 4px;font-size:clamp(19px,2vw,28px);line-height:1.15}
-.header p{margin:0;font-size:12px;opacity:.84}
-.header-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.status-pill{display:inline-flex;align-items:center;gap:8px;padding:8px 11px;border-radius:999px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);font-size:12px}
-.status-dot{width:8px;height:8px;border-radius:50%;background:#44df99;box-shadow:0 0 0 4px rgba(68,223,153,.14)}
-.top-btn{border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;padding:8px 10px;border-radius:10px;cursor:pointer;font-size:12px;font-weight:700}
-.top-btn:hover{background:rgba(255,255,255,.18)}
-.workspace{min-height:0;background:var(--panel);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);overflow:hidden}
+
+.header-left{
+  min-width:0;
+}
+
+.header h1{
+  margin:0 0 4px;
+  font-size:clamp(20px,2vw,28px);
+  line-height:1.15;
+  letter-spacing:.01em;
+}
+
+.header p{
+  margin:0;
+  font-size:12px;
+  opacity:.84;
+}
+
+.header-actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.status-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 11px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.22);
+  background:rgba(255,255,255,.10);
+  font-size:12px;
+  white-space:nowrap;
+}
+
+.status-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#44df99;
+  box-shadow:0 0 0 4px rgba(68,223,153,.14);
+}
+
+.top-btn{
+  border:1px solid rgba(255,255,255,.20);
+  background:rgba(255,255,255,.10);
+  color:#fff;
+  padding:8px 10px;
+  border-radius:10px;
+  cursor:pointer;
+  font-size:12px;
+  font-weight:700;
+}
+
+.top-btn:hover{
+  background:rgba(255,255,255,.18);
+}
+
+/* ============================================================
+   WORKSPACE / CHAT
+   ============================================================ */
+
+.workspace{
+  min-height:0;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:20px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
 .chat{
-  height:100%; overflow-y:auto; padding:18px 18px 28px; scroll-behavior:smooth;
-  background:radial-gradient(circle at top right,rgba(37,99,235,.035),transparent 26%),linear-gradient(180deg,#fff 0%,#fbfdff 100%);
+  height:100%;
+  overflow-y:auto;
+  padding:18px 18px 28px;
+  scroll-behavior:smooth;
+  background:
+    radial-gradient(circle at top right,rgba(37,99,235,.03),transparent 24%),
+    linear-gradient(180deg,#ffffff 0%,#fbfdff 100%);
 }
-.welcome{max-width:760px;border:1px solid var(--line);border-radius:18px;padding:16px 18px;background:#fff;box-shadow:0 4px 15px rgba(15,35,70,.04)}
-.welcome.compact{display:none}
-.welcome-title{margin:0 0 8px;font-weight:800;font-size:17px;color:#0f274e}
-.welcome p{margin:0 0 8px;line-height:1.55}.welcome ul{margin:8px 0 0 20px;padding:0;line-height:1.6}
-.msg{display:flex;margin:14px 0;width:100%}.msg.user{justify-content:flex-end}.msg.ai{justify-content:flex-start}
-.bubble{border-radius:16px;padding:14px 16px;line-height:1.58;box-shadow:0 4px 15px rgba(15,35,70,.04)}
-.user .bubble{width:min(64%,760px);background:var(--blue-soft);border:1px solid #cfe0fb}
-.ai .bubble{width:100%;max-width:none;background:#fff;border:1px solid var(--line)}
-.label-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
-.label{color:var(--muted);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em}
-.time{color:#94a3b8;font-size:11px;white-space:nowrap}
-.meta-row{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 10px}
-.badge{display:inline-flex;align-items:center;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:800;border:1px solid transparent}
-.badge.tech{background:var(--blue-soft);color:var(--blue-dark);border-color:#cfe0fb}
-.badge.meta{background:var(--violet-soft);color:var(--violet);border-color:#ddceff}
-.badge.out{background:var(--gray-soft);color:#475569;border-color:#dbe3ec}
-.badge.direct,.badge.keyword{background:var(--amber-soft);color:var(--amber);border-color:#f2d19a}
-.badge.semantic{background:var(--green-soft);color:var(--green);border-color:#ccebdc}
-.badge.model{background:#eef2ff;color:#4f46a5;border-color:#d9ddff}
-.badge.busy{background:var(--red-soft);color:var(--red);border-color:#f4c5c0}
-.answer{overflow-wrap:anywhere;font-size:16px;line-height:1.72}
-.answer h1,.answer h2,.answer h3{margin:14px 0 8px;line-height:1.3;color:#0f274e}
-.answer h1{font-size:20px}.answer h2{font-size:18px}.answer h3{font-size:16px}
-.answer p{margin:8px 0}.answer ul,.answer ol{margin:8px 0 8px 24px;padding:0}.answer li{margin:4px 0}.answer strong{font-weight:800}
-.answer code{background:#f1f5f9;border:1px solid #e2e8f0;border-radius:5px;padding:1px 5px;font-size:.92em}
-.answer hr{border:0;border-top:1px solid #e5ebf2;margin:14px 0}
-.sources{margin-top:14px;padding-top:11px;border-top:1px dashed var(--line)}
-.sources-title{display:block;color:var(--muted);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin-bottom:7px}
-.source-primary{font-size:13px;color:#243447;padding:10px 12px;background:#f8fafc;border:1px solid #e6edf5;border-radius:10px}
-details.rag-details{margin-top:8px} details.rag-details summary{cursor:pointer;color:var(--muted);font-size:12px;font-weight:700}
-.source-secondary{font-size:12px;color:#475569;padding:8px 10px;background:#fbfdff;border:1px solid #eef2f7;border-radius:9px;margin-top:6px}
-.msg-actions{display:flex;gap:8px;margin-top:12px}
-.msg-btn{border:1px solid #dbe3ec;background:#f8fafc;color:#475569;border-radius:8px;padding:6px 9px;cursor:pointer;font-size:11px;font-weight:700}
-.msg-btn:hover{background:#eef3f8}
+
+/* ============================================================
+   WELCOME
+   ============================================================ */
+
+.welcome{
+  max-width:760px;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:16px 18px;
+  background:#fff;
+  box-shadow:0 4px 15px rgba(15,35,70,.04);
+}
+
+.welcome.hidden{
+  display:none;
+}
+
+.welcome-title{
+  margin:0 0 8px;
+  font-weight:800;
+  font-size:17px;
+  color:#0f274e;
+}
+
+.welcome p{
+  margin:0 0 8px;
+  line-height:1.55;
+}
+
+.welcome ul{
+  margin:8px 0 0 20px;
+  padding:0;
+  line-height:1.6;
+}
+
+/* ============================================================
+   MESSAGE
+   ============================================================ */
+
+.msg{
+  display:flex;
+  width:100%;
+  margin:14px 0;
+}
+
+.msg.user{
+  justify-content:flex-end;
+}
+
+.msg.ai{
+  justify-content:flex-start;
+}
+
+.bubble{
+  border-radius:16px;
+  padding:14px 16px;
+  line-height:1.58;
+  box-shadow:0 4px 15px rgba(15,35,70,.04);
+}
+
+/* User chỉ chiếm khoảng 58% */
+.user .bubble{
+  width:auto;
+  max-width:58%;
+  min-width:260px;
+  background:var(--blue-soft);
+  border:1px solid #cfe0fb;
+}
+
+/* AI full-width */
+.ai .bubble{
+  width:100%;
+  max-width:none;
+  background:#fff;
+  border:1px solid var(--line);
+}
+
+.label-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:8px;
+}
+
+.label{
+  color:var(--muted);
+  font-size:11px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+}
+
+.time{
+  color:#94a3b8;
+  font-size:11px;
+  white-space:nowrap;
+}
+
+/* ============================================================
+   BADGES
+   ============================================================ */
+
+.meta-row{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  margin:0 0 10px;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  border-radius:999px;
+  padding:5px 9px;
+  font-size:11px;
+  font-weight:800;
+  border:1px solid transparent;
+}
+
+.badge.tech{
+  background:var(--blue-soft);
+  color:var(--blue-dark);
+  border-color:#cfe0fb;
+}
+
+.badge.meta{
+  background:var(--violet-soft);
+  color:var(--violet);
+  border-color:#ddceff;
+}
+
+.badge.out{
+  background:var(--gray-soft);
+  color:#475569;
+  border-color:#dbe3ec;
+}
+
+.badge.direct,
+.badge.keyword{
+  background:var(--amber-soft);
+  color:var(--amber);
+  border-color:#f2d19a;
+}
+
+.badge.semantic{
+  background:var(--green-soft);
+  color:var(--green);
+  border-color:#ccebdc;
+}
+
+.badge.model{
+  background:#eef2ff;
+  color:#4f46a5;
+  border-color:#d9ddff;
+}
+
+.badge.busy{
+  background:var(--red-soft);
+  color:var(--red);
+  border-color:#f4c5c0;
+}
+
+/* ============================================================
+   ANSWER
+   ============================================================ */
+
+.answer{
+  overflow-wrap:anywhere;
+  font-size:16px;
+  line-height:1.72;
+}
+
+.answer h1,
+.answer h2,
+.answer h3{
+  margin:14px 0 8px;
+  line-height:1.3;
+  color:#0f274e;
+}
+
+.answer h1{font-size:20px}
+.answer h2{font-size:18px}
+.answer h3{font-size:16px}
+
+.answer p{
+  margin:8px 0;
+}
+
+.answer ul,
+.answer ol{
+  margin:8px 0 8px 24px;
+  padding:0;
+}
+
+.answer li{
+  margin:4px 0;
+}
+
+.answer strong{
+  font-weight:800;
+}
+
+.answer code{
+  background:#f1f5f9;
+  border:1px solid #e2e8f0;
+  border-radius:5px;
+  padding:1px 5px;
+  font-size:.92em;
+}
+
+.answer blockquote{
+  margin:10px 0;
+  padding:9px 12px;
+  border-left:4px solid #9bbcf0;
+  background:#f8fbff;
+  color:#334155;
+}
+
+.answer hr{
+  border:0;
+  border-top:1px solid #e5ebf2;
+  margin:14px 0;
+}
+
+/* ============================================================
+   SOURCES
+   ============================================================ */
+
+.sources{
+  margin-top:14px;
+  padding-top:11px;
+  border-top:1px dashed var(--line);
+}
+
+.sources-title{
+  display:block;
+  color:var(--muted);
+  font-size:11px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+  margin-bottom:7px;
+}
+
+.source-primary{
+  font-size:13px;
+  color:#243447;
+  padding:10px 12px;
+  background:#f8fafc;
+  border:1px solid #e6edf5;
+  border-radius:10px;
+}
+
+details.rag-details{
+  margin-top:8px;
+}
+
+details.rag-details summary{
+  cursor:pointer;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:700;
+}
+
+.source-secondary{
+  font-size:12px;
+  color:#475569;
+  padding:8px 10px;
+  background:#fbfdff;
+  border:1px solid #eef2f7;
+  border-radius:9px;
+  margin-top:6px;
+}
+
+/* ============================================================
+   MESSAGE ACTIONS
+   ============================================================ */
+
+.msg-actions{
+  display:flex;
+  gap:8px;
+  margin-top:12px;
+}
+
+.msg-btn{
+  border:1px solid #dbe3ec;
+  background:#f8fafc;
+  color:#475569;
+  border-radius:8px;
+  padding:6px 9px;
+  cursor:pointer;
+  font-size:11px;
+  font-weight:700;
+}
+
+.msg-btn:hover{
+  background:#eef3f8;
+}
+
+/* ============================================================
+   COMPOSER
+   ============================================================ */
+
 .composer{
-  background:var(--panel); border:1px solid var(--line); border-radius:16px; box-shadow:var(--shadow);
-  padding:10px; display:grid; grid-template-columns:1fr auto; gap:10px; align-items:end;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:16px;
+  box-shadow:var(--shadow);
+  padding:10px;
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:10px;
+  align-items:end;
 }
-.field{width:100%;border:1px solid var(--line);border-radius:11px;padding:11px 12px;outline:none;background:#fff;color:var(--text)}
-.field:focus{border-color:#8bb6f8;box-shadow:0 0 0 3px rgba(15,91,215,.08)}
-textarea{resize:none;min-height:52px;max-height:130px}
-.btn{border:0;border-radius:11px;padding:11px 16px;cursor:pointer;font-weight:700}
-.btn-primary{color:#fff;background:var(--blue)}.btn-primary:hover{background:var(--blue-dark)}.btn:disabled{opacity:.55;cursor:not-allowed}
-.footer-note{grid-column:1/-1;color:var(--muted);font-size:11px;text-align:center;margin-top:-2px}
-.loading-wrap{display:flex;gap:10px;align-items:center}
-.spinner{width:18px;height:18px;border-radius:50%;border:3px solid #dbeafe;border-top-color:var(--blue);animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}.loading-text{color:var(--muted);font-size:13px}
-.overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:18px;z-index:1000}
-.overlay.hidden{display:none}
-.login-card{width:min(440px,100%);background:#fff;border-radius:18px;box-shadow:0 22px 60px rgba(15,23,42,.28);padding:22px}
-.login-icon{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:var(--blue-soft);color:var(--blue);font-weight:900;margin-bottom:14px}
-.login-card h2{margin:0 0 8px;font-size:20px}.login-card p{margin:0 0 16px;color:var(--muted);font-size:13px;line-height:1.5}
-.login-error{display:none;margin-top:10px;color:var(--red);background:var(--red-soft);border:1px solid #f4c5c0;border-radius:9px;padding:8px 10px;font-size:12px}
+
+.field{
+  width:100%;
+  border:1px solid var(--line);
+  border-radius:11px;
+  padding:11px 12px;
+  outline:none;
+  background:#fff;
+  color:var(--text);
+}
+
+.field:focus{
+  border-color:#8bb6f8;
+  box-shadow:0 0 0 3px rgba(15,91,215,.08);
+}
+
+textarea{
+  resize:none;
+  min-height:52px;
+  max-height:130px;
+}
+
+.btn{
+  border:0;
+  border-radius:11px;
+  padding:11px 16px;
+  cursor:pointer;
+  font-weight:700;
+}
+
+.btn-primary{
+  color:#fff;
+  background:var(--blue);
+}
+
+.btn-primary:hover{
+  background:var(--blue-dark);
+}
+
+.btn:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+}
+
+.footer-note{
+  grid-column:1/-1;
+  color:var(--muted);
+  font-size:11px;
+  text-align:center;
+  margin-top:-2px;
+}
+
+/* ============================================================
+   LOADING
+   ============================================================ */
+
+.loading-wrap{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+.spinner{
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  border:3px solid #dbeafe;
+  border-top-color:var(--blue);
+  animation:spin .8s linear infinite;
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
+
+.loading-text{
+  color:var(--muted);
+  font-size:13px;
+}
+
+/* ============================================================
+   ACCESS MODAL
+   ============================================================ */
+
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(15,23,42,.55);
+  backdrop-filter:blur(4px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  z-index:1000;
+}
+
+.overlay.hidden{
+  display:none;
+}
+
+.login-card{
+  width:min(440px,100%);
+  background:#fff;
+  border-radius:18px;
+  box-shadow:0 22px 60px rgba(15,23,42,.28);
+  padding:22px;
+}
+
+.login-icon{
+  width:48px;
+  height:48px;
+  border-radius:14px;
+  display:grid;
+  place-items:center;
+  background:var(--blue-soft);
+  color:var(--blue);
+  font-weight:900;
+  margin-bottom:14px;
+}
+
+.login-card h2{
+  margin:0 0 8px;
+  font-size:20px;
+}
+
+.login-card p{
+  margin:0 0 16px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+}
+
+.login-error{
+  display:none;
+  margin-top:10px;
+  color:var(--red);
+  background:var(--red-soft);
+  border:1px solid #f4c5c0;
+  border-radius:9px;
+  padding:8px 10px;
+  font-size:12px;
+}
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
 @media(max-width:820px){
-  body{overflow:auto}
-  .app{height:auto;min-height:100dvh;width:100%;padding:8px;gap:8px;display:flex;flex-direction:column}
-  .header{min-height:auto;padding:12px 14px}.header p{display:none}.header-actions{width:100%;justify-content:flex-start}
-  .workspace{min-height:60vh}.chat{max-height:none;overflow:visible;padding:12px}.user .bubble{width:92%}
-  .composer{position:sticky;bottom:0;grid-template-columns:1fr}.footer-note{display:none}
+
+  body{
+    overflow:auto;
+  }
+
+  .app{
+    width:100%;
+    height:auto;
+    min-height:100dvh;
+    padding:8px;
+    gap:8px;
+    display:flex;
+    flex-direction:column;
+  }
+
+  .header{
+    min-height:auto;
+    padding:12px 14px;
+  }
+
+  .header p{
+    display:none;
+  }
+
+  .header-actions{
+    width:100%;
+    justify-content:flex-start;
+  }
+
+  .workspace{
+    min-height:60vh;
+  }
+
+  .chat{
+    height:auto;
+    overflow:visible;
+    padding:12px;
+  }
+
+  .user .bubble{
+    min-width:0;
+    max-width:92%;
+  }
+
+  .composer{
+    position:sticky;
+    bottom:0;
+    grid-template-columns:1fr;
+  }
+
+  .footer-note{
+    display:none;
+  }
 }
 </style>
 </head>
 
 <body>
+
+<!-- ============================================================
+     ACCESS MODAL
+     ============================================================ -->
+
 <div id="accessOverlay" class="overlay">
   <div class="login-card">
+
     <div class="login-icon">AI</div>
+
     <h2>Trợ lý AI kỹ thuật A Vương</h2>
-    <p>Nhập mã truy cập nội bộ để sử dụng hệ thống. Mã chỉ được lưu trong phiên trình duyệt hiện tại.</p>
-    <input id="accessKeyInput" class="field" type="password" placeholder="Mã truy cập nội bộ">
-    <button id="accessBtn" class="btn btn-primary" style="width:100%;margin-top:10px">Truy cập hệ thống</button>
-    <div id="loginError" class="login-error"></div>
+
+    <p>
+      Nhập mã truy cập nội bộ để sử dụng hệ thống.
+      Mã chỉ được lưu trong phiên trình duyệt hiện tại.
+    </p>
+
+    <input
+      id="accessKeyInput"
+      class="field"
+      type="password"
+      placeholder="Mã truy cập nội bộ"
+    />
+
+    <button
+      id="accessBtn"
+      class="btn btn-primary"
+      style="width:100%; margin-top:10px"
+    >
+      Truy cập hệ thống
+    </button>
+
+    <div
+      id="loginError"
+      class="login-error"
+    ></div>
+
   </div>
 </div>
 
+
+<!-- ============================================================
+     APP
+     ============================================================ -->
+
 <div class="app">
+
+  <!-- HEADER -->
   <header class="header">
-    <div class="header-main">
-      <h1>A VƯƠNG - TRỢ LÝ AI TÀI LIỆU KỸ THUẬT</h1>
-      <p>Tra cứu quy trình kỹ thuật nội bộ • POC</p>
+
+    <div class="header-left">
+
+      <h1>
+        A VƯƠNG - TRỢ LÝ AI TÀI LIỆU KỸ THUẬT
+      </h1>
+
+      <p>
+        Tra cứu quy trình kỹ thuật nội bộ • POC
+      </p>
+
     </div>
+
     <div class="header-actions">
-      <div class="status-pill"><span class="status-dot"></span>Đang kết nối</div>
-      <button id="clearBtn" class="top-btn">Xóa hội thoại</button>
-      <button id="logoutBtn" class="top-btn">Đổi mã truy cập</button>
+
+      <div class="status-pill">
+
+        <span class="status-dot"></span>
+
+        <span>
+          Đang kết nối
+        </span>
+
+      </div>
+
+      <button
+        id="clearBtn"
+        class="top-btn"
+      >
+        Xóa hội thoại
+      </button>
+
+      <button
+        id="logoutBtn"
+        class="top-btn"
+      >
+        Đổi mã truy cập
+      </button>
+
     </div>
+
   </header>
 
+
+  <!-- CHAT -->
   <main class="workspace">
-    <div id="chat" class="chat">
-      <div id="welcome" class="welcome">
+
+    <div
+      id="chat"
+      class="chat"
+    >
+
+      <div
+        id="welcome"
+        class="welcome"
+      >
+
         <div class="meta-row">
-          <span class="badge tech">KỸ THUẬT</span>
-          <span class="badge semantic">RAG</span>
-          <span class="badge model">xAI • Grok</span>
+
+          <span class="badge tech">
+            KỸ THUẬT
+          </span>
+
+          <span class="badge semantic">
+            RAG
+          </span>
+
+          <span class="badge model">
+            xAI • Grok
+          </span>
+
         </div>
-        <div class="welcome-title">Xin chào. Tôi hỗ trợ tra cứu tài liệu kỹ thuật NMTĐ A Vương.</div>
-        <p>Bạn có thể hỏi:</p>
+
+        <div class="welcome-title">
+          Xin chào. Tôi hỗ trợ tra cứu tài liệu kỹ thuật NMTĐ A Vương.
+        </div>
+
+        <p>
+          Bạn có thể hỏi:
+        </p>
+
         <ul>
           <li>Máy tính OPS lỗi thì xử lý như thế nào?</li>
           <li>SPC800 Redundancy Fail xử lý ra sao?</li>
@@ -147,262 +831,1813 @@ textarea{resize:none;min-height:52px;max-height:130px}
           <li>QT.AV.VH.604 ban hành năm nào?</li>
           <li>Quy trình QT.AV.VH.604 nói về nội dung gì?</li>
         </ul>
+
       </div>
+
     </div>
+
   </main>
 
+
+  <!-- COMPOSER -->
   <section class="composer">
-    <textarea id="question" class="field" placeholder="Nhập câu hỏi kỹ thuật... (Enter để gửi, Shift+Enter xuống dòng)"></textarea>
-    <button id="sendBtn" class="btn btn-primary">Gửi câu hỏi</button>
-    <div class="footer-note">AI chỉ hỗ trợ tra cứu; thao tác thực tế phải tuân thủ quy trình đang có hiệu lực và phân cấp vận hành.</div>
+
+    <textarea
+      id="question"
+      class="field"
+      placeholder="Nhập câu hỏi kỹ thuật... (Enter để gửi, Shift+Enter xuống dòng)"
+    ></textarea>
+
+    <button
+      id="sendBtn"
+      class="btn btn-primary"
+    >
+      Gửi câu hỏi
+    </button>
+
+    <div class="footer-note">
+      AI chỉ hỗ trợ tra cứu; thao tác thực tế phải tuân thủ quy trình đang có hiệu lực và phân cấp vận hành.
+    </div>
+
   </section>
+
 </div>
 
+
 <script>
-const API_ENDPOINT = "https://xaukyrrmzhikfzuinnfd.supabase.co/functions/v1/ask-ai";
-const ACCESS_HEADER = "x-poc-key";
+// ============================================================
+// CONFIG
+// ============================================================
 
-const chat=document.getElementById("chat");
-const welcome=document.getElementById("welcome");
-const question=document.getElementById("question");
-const sendBtn=document.getElementById("sendBtn");
-const clearBtn=document.getElementById("clearBtn");
-const logoutBtn=document.getElementById("logoutBtn");
-const accessOverlay=document.getElementById("accessOverlay");
-const accessKeyInput=document.getElementById("accessKeyInput");
-const accessBtn=document.getElementById("accessBtn");
-const loginError=document.getElementById("loginError");
+// Endpoint cố định, không hiển thị cho người dùng
+const API_ENDPOINT =
+  "https://xaukyrrmzhikfzuinnfd.supabase.co/functions/v1/ask-ai";
 
-let pocAccessKey=sessionStorage.getItem("av_poc_key")||"";
+// QUAN TRỌNG:
+// Backend ask-ai V4.0 đọc đúng header này:
+const ACCESS_HEADER =
+  "x-poc-key";
 
-function showAccessDialog(message=""){
-  loginError.style.display=message?"block":"none";
-  loginError.textContent=message;
-  accessOverlay.classList.remove("hidden");
-  setTimeout(()=>accessKeyInput.focus(),50);
+
+// ============================================================
+// ELEMENTS
+// ============================================================
+
+const chat =
+  document.getElementById("chat");
+
+const welcome =
+  document.getElementById("welcome");
+
+const question =
+  document.getElementById("question");
+
+const sendBtn =
+  document.getElementById("sendBtn");
+
+const clearBtn =
+  document.getElementById("clearBtn");
+
+const logoutBtn =
+  document.getElementById("logoutBtn");
+
+const accessOverlay =
+  document.getElementById("accessOverlay");
+
+const accessKeyInput =
+  document.getElementById("accessKeyInput");
+
+const accessBtn =
+  document.getElementById("accessBtn");
+
+const loginError =
+  document.getElementById("loginError");
+
+
+// ============================================================
+// ACCESS KEY - SESSION STORAGE
+// ============================================================
+
+let pocAccessKey =
+  sessionStorage.getItem("av_poc_key") || "";
+
+
+function showAccessDialog(
+  message = ""
+){
+
+  loginError.style.display =
+    message
+      ? "block"
+      : "none";
+
+  loginError.textContent =
+    message;
+
+  accessOverlay.classList.remove(
+    "hidden"
+  );
+
+  setTimeout(
+    () => {
+      accessKeyInput.focus();
+    },
+    50
+  );
 }
-function hideAccessDialog(){accessOverlay.classList.add("hidden");question.focus()}
-if(pocAccessKey){accessOverlay.classList.add("hidden")}else{showAccessDialog()}
 
-accessBtn.addEventListener("click",()=>{
-  const key=accessKeyInput.value.trim();
-  if(!key){showAccessDialog("Vui lòng nhập mã truy cập.");return}
-  pocAccessKey=key;
-  sessionStorage.setItem("av_poc_key",key);
-  accessKeyInput.value="";
-  hideAccessDialog();
-});
-accessKeyInput.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();accessBtn.click()}});
-logoutBtn.addEventListener("click",()=>{
-  pocAccessKey="";
-  sessionStorage.removeItem("av_poc_key");
-  showAccessDialog("Nhập mã truy cập mới.");
-});
+
+function hideAccessDialog(){
+
+  accessOverlay.classList.add(
+    "hidden"
+  );
+
+  question.focus();
+}
+
+
+if(pocAccessKey){
+
+  accessOverlay.classList.add(
+    "hidden"
+  );
+
+}
+else{
+
+  showAccessDialog();
+
+}
+
+
+accessBtn.addEventListener(
+  "click",
+  () => {
+
+    const key =
+      accessKeyInput.value.trim();
+
+
+    if(!key){
+
+      showAccessDialog(
+        "Vui lòng nhập mã truy cập."
+      );
+
+      return;
+
+    }
+
+
+    pocAccessKey =
+      key;
+
+
+    sessionStorage.setItem(
+      "av_poc_key",
+      key
+    );
+
+
+    accessKeyInput.value =
+      "";
+
+
+    hideAccessDialog();
+
+  }
+);
+
+
+accessKeyInput.addEventListener(
+  "keydown",
+  event => {
+
+    if(
+      event.key ===
+      "Enter"
+    ){
+
+      event.preventDefault();
+
+      accessBtn.click();
+
+    }
+
+  }
+);
+
+
+logoutBtn.addEventListener(
+  "click",
+  () => {
+
+    pocAccessKey =
+      "";
+
+
+    sessionStorage.removeItem(
+      "av_poc_key"
+    );
+
+
+    showAccessDialog(
+      "Nhập mã truy cập mới."
+    );
+
+  }
+);
+
+
+// ============================================================
+// TIME
+// ============================================================
 
 function currentTime(){
-  return new Intl.DateTimeFormat("vi-VN",{hour:"2-digit",minute:"2-digit"}).format(new Date());
+
+  return new Intl.DateTimeFormat(
+    "vi-VN",
+    {
+      hour:
+        "2-digit",
+
+      minute:
+        "2-digit"
+    }
+  )
+  .format(
+    new Date()
+  );
+
 }
-function escapeHtml(text){
-  return String(text??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+
+
+// ============================================================
+// HTML / MARKDOWN
+// ============================================================
+
+function escapeHtml(
+  text
+){
+
+  return String(
+    text ?? ""
+  )
+  .replace(
+    /&/g,
+    "&amp;"
+  )
+  .replace(
+    /</g,
+    "&lt;"
+  )
+  .replace(
+    />/g,
+    "&gt;"
+  );
+
 }
-function inlineMarkdown(text){
-  let s=escapeHtml(text);
-  s=s.replace(/`([^`]+)`/g,"<code>$1</code>");
-  s=s.replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>");
+
+
+function inlineMarkdown(
+  text
+){
+
+  let s =
+    escapeHtml(
+      text
+    );
+
+
+  s =
+    s.replace(
+      /`([^`]+)`/g,
+      "<code>$1</code>"
+    );
+
+
+  s =
+    s.replace(
+      /\*\*([^*]+)\*\*/g,
+      "<strong>$1</strong>"
+    );
+
+
   return s;
+
 }
-function renderMarkdown(md){
-  const lines=String(md||"").replace(/\r\n/g,"\n").split("\n");
-  let html="",inUl=false,inOl=false;
-  const closeLists=()=>{if(inUl){html+="</ul>";inUl=false}if(inOl){html+="</ol>";inOl=false}};
-  for(const raw of lines){
-    const t=raw.trim();
-    if(!t){closeLists();continue}
-    if(/^---+$/.test(t)){closeLists();html+="<hr>";continue}
-    let m=t.match(/^###\s+(.+)$/); if(m){closeLists();html+=`<h3>${inlineMarkdown(m[1])}</h3>`;continue}
-    m=t.match(/^##\s+(.+)$/); if(m){closeLists();html+=`<h2>${inlineMarkdown(m[1])}</h2>`;continue}
-    m=t.match(/^#\s+(.+)$/); if(m){closeLists();html+=`<h1>${inlineMarkdown(m[1])}</h1>`;continue}
-    m=t.match(/^(\d+)\.\s+(Hiện tượng|Nguyên nhân|Biện pháp xử lý)(.*)$/i);
-    if(m){closeLists();html+=`<h3>${inlineMarkdown(m[1]+". "+m[2]+m[3])}</h3>`;continue}
-    m=t.match(/^([a-zA-Z])\)\s+(.+)$/);
-    if(m){
-      if(inUl){html+="</ul>";inUl=false}
-      if(!inOl){html+='<ol style="list-style-type:lower-alpha">';inOl=true}
-      html+=`<li>${inlineMarkdown(m[2])}</li>`;continue
+
+
+function renderMarkdown(
+  markdown
+){
+
+  const lines =
+    String(
+      markdown || ""
+    )
+    .replace(
+      /\r\n/g,
+      "\n"
+    )
+    .split(
+      "\n"
+    );
+
+
+  let html =
+    "";
+
+
+  let inUl =
+    false;
+
+
+  let inOl =
+    false;
+
+
+  function closeLists(){
+
+    if(inUl){
+
+      html +=
+        "</ul>";
+
+      inUl =
+        false;
+
     }
-    m=t.match(/^[-*]\s+(.+)$/);
-    if(m){
-      if(inOl){html+="</ol>";inOl=false}
-      if(!inUl){html+="<ul>";inUl=true}
-      html+=`<li>${inlineMarkdown(m[1])}</li>`;continue
+
+
+    if(inOl){
+
+      html +=
+        "</ol>";
+
+      inOl =
+        false;
+
     }
-    m=t.match(/^\d+[.)]\s+(.+)$/);
-    if(m){
-      if(inUl){html+="</ul>";inUl=false}
-      if(!inOl){html+="<ol>";inOl=true}
-      html+=`<li>${inlineMarkdown(m[1])}</li>`;continue
+
+  }
+
+
+  for(
+    const raw of
+    lines
+  ){
+
+    const t =
+      raw.trim();
+
+
+    if(!t){
+
+      closeLists();
+
+      continue;
+
     }
+
+
+    if(
+      /^---+$/.test(
+        t
+      )
+    ){
+
+      closeLists();
+
+      html +=
+        "<hr>";
+
+      continue;
+
+    }
+
+
+    let m =
+      t.match(
+        /^###\s+(.+)$/
+      );
+
+
+    if(m){
+
+      closeLists();
+
+      html +=
+        `<h3>${inlineMarkdown(m[1])}</h3>`;
+
+      continue;
+
+    }
+
+
+    m =
+      t.match(
+        /^##\s+(.+)$/
+      );
+
+
+    if(m){
+
+      closeLists();
+
+      html +=
+        `<h2>${inlineMarkdown(m[1])}</h2>`;
+
+      continue;
+
+    }
+
+
+    m =
+      t.match(
+        /^#\s+(.+)$/
+      );
+
+
+    if(m){
+
+      closeLists();
+
+      html +=
+        `<h1>${inlineMarkdown(m[1])}</h1>`;
+
+      continue;
+
+    }
+
+
+    // Các mục kỹ thuật chính
+    m =
+      t.match(
+        /^(\d+)\.\s+(Hiện tượng|Nguyên nhân|Biện pháp xử lý)(.*)$/i
+      );
+
+
+    if(m){
+
+      closeLists();
+
+      html +=
+        `<h3>${inlineMarkdown(
+          m[1] +
+          ". " +
+          m[2] +
+          m[3]
+        )}</h3>`;
+
+      continue;
+
+    }
+
+
+    // a) b) c) ...
+    m =
+      t.match(
+        /^([a-zA-Z])\)\s+(.+)$/
+      );
+
+
+    if(m){
+
+      if(inUl){
+
+        html +=
+          "</ul>";
+
+        inUl =
+          false;
+
+      }
+
+
+      if(!inOl){
+
+        html +=
+          '<ol style="list-style-type:lower-alpha">';
+
+        inOl =
+          true;
+
+      }
+
+
+      html +=
+        `<li>${inlineMarkdown(m[2])}</li>`;
+
+      continue;
+
+    }
+
+
+    // bullet
+    m =
+      t.match(
+        /^[-*]\s+(.+)$/
+      );
+
+
+    if(m){
+
+      if(inOl){
+
+        html +=
+          "</ol>";
+
+        inOl =
+          false;
+
+      }
+
+
+      if(!inUl){
+
+        html +=
+          "<ul>";
+
+        inUl =
+          true;
+
+      }
+
+
+      html +=
+        `<li>${inlineMarkdown(m[1])}</li>`;
+
+      continue;
+
+    }
+
+
+    // numbered list
+    m =
+      t.match(
+        /^\d+[.)]\s+(.+)$/
+      );
+
+
+    if(m){
+
+      if(inUl){
+
+        html +=
+          "</ul>";
+
+        inUl =
+          false;
+
+      }
+
+
+      if(!inOl){
+
+        html +=
+          "<ol>";
+
+        inOl =
+          true;
+
+      }
+
+
+      html +=
+        `<li>${inlineMarkdown(m[1])}</li>`;
+
+      continue;
+
+    }
+
+
     closeLists();
-    if(t.toUpperCase()==="NGUỒN"){html+="<h3>NGUỒN</h3>";continue}
-    html+=`<p>${inlineMarkdown(t)}</p>`;
+
+
+    if(
+      t.toUpperCase() ===
+      "NGUỒN"
+    ){
+
+      html +=
+        "<h3>NGUỒN</h3>";
+
+      continue;
+
+    }
+
+
+    html +=
+      `<p>${inlineMarkdown(t)}</p>`;
+
   }
+
+
   closeLists();
+
+
   return html;
+
 }
 
-function friendlyModelName(model){
-  const m=String(model||"").toLowerCase();
-  if(m.includes("grok-4.20"))return "xAI • Grok 4.20";
-  if(m.includes("grok-4.3"))return "xAI • Grok 4.3";
-  if(m.includes("grok-4.6"))return "xAI • Grok 4.6";
-  if(m.includes("grok"))return "xAI • Grok";
-  return model||"";
-}
-function getBadges(data){
-  const b=[];
-  if(data?.route==="TECHNICAL_RAG")b.push({text:"KỸ THUẬT",cls:"tech"});
-  else if(data?.route==="DOCUMENT_METADATA")b.push({text:"HỒ SƠ TÀI LIỆU",cls:"meta"});
-  else if(data?.route==="OUT_OF_SCOPE")b.push({text:"NGOÀI PHẠM VI",cls:"out"});
-  else if(data?.route==="SYSTEM_ERROR")b.push({text:"LỖI HỆ THỐNG",cls:"busy"});
-  if(data?.answer_mode==="SOURCE_DIRECT")b.push({text:"NGUỒN TRỰC TIẾP",cls:"direct"});
-  else if(data?.answer_mode==="GROK")b.push({text:"AI TỔNG HỢP",cls:"semantic"});
-  if(data?.retrieval_mode==="SEMANTIC")b.push({text:"NGỮ NGHĨA",cls:"semantic"});
-  if(data?.retrieval_mode==="KEYWORD_FALLBACK")b.push({text:"TỪ KHÓA DỰ PHÒNG",cls:"keyword"});
-  if(data?.model_used)b.push({text:friendlyModelName(data.model_used),cls:"model"});
-  return b;
-}
-function buildSourceLabel(s){
-  return `${s.document_code||"QT.AV.VH.604"} • Điều ${s.article_number} • Trang ${s.page_start}-${s.page_end}`;
-}
-function renderSources(data){
-  const sources=Array.isArray(data?.sources)?[...data.sources]:[];
-  if(!sources.length)return null;
-  const box=document.createElement("div"); box.className="sources";
-  const title=document.createElement("span"); title.className="sources-title"; title.textContent="Nguồn được trích dẫn"; box.appendChild(title);
-  const primary=document.createElement("div"); primary.className="source-primary"; primary.textContent=buildSourceLabel(sources[0]); box.appendChild(primary);
-  if(data?.answer_mode==="SOURCE_DIRECT")return box;
-  if(sources.length>1){
-    const details=document.createElement("details"); details.className="rag-details";
-    const summary=document.createElement("summary"); summary.textContent=`Xem ${sources.length-1} nguồn RAG bổ sung`; details.appendChild(summary);
-    sources.slice(1).forEach(s=>{const item=document.createElement("div");item.className="source-secondary";item.textContent=buildSourceLabel(s);details.appendChild(item)});
-    box.appendChild(details);
+
+// ============================================================
+// MODEL FRIENDLY NAME
+// ============================================================
+
+function friendlyModelName(
+  model
+){
+
+  const m =
+    String(
+      model || ""
+    )
+    .toLowerCase();
+
+
+  if(
+    m.includes(
+      "grok-4.20"
+    )
+  ){
+
+    return "xAI • Grok 4.20";
+
   }
+
+
+  if(
+    m.includes(
+      "grok-4.3"
+    )
+  ){
+
+    return "xAI • Grok 4.3";
+
+  }
+
+
+  if(
+    m.includes(
+      "grok-4.6"
+    )
+  ){
+
+    return "xAI • Grok 4.6";
+
+  }
+
+
+  if(
+    m.includes(
+      "grok"
+    )
+  ){
+
+    return "xAI • Grok";
+
+  }
+
+
+  return model || "";
+
+}
+
+
+// ============================================================
+// BADGES
+// ============================================================
+
+function getBadges(
+  data
+){
+
+  const badges =
+    [];
+
+
+  if(
+    data?.route ===
+    "TECHNICAL_RAG"
+  ){
+
+    badges.push({
+      text:
+        "KỸ THUẬT",
+
+      cls:
+        "tech"
+    });
+
+  }
+  else if(
+    data?.route ===
+    "DOCUMENT_METADATA"
+  ){
+
+    badges.push({
+      text:
+        "HỒ SƠ TÀI LIỆU",
+
+      cls:
+        "meta"
+    });
+
+  }
+  else if(
+    data?.route ===
+    "OUT_OF_SCOPE"
+  ){
+
+    badges.push({
+      text:
+        "NGOÀI PHẠM VI",
+
+      cls:
+        "out"
+    });
+
+  }
+  else if(
+    data?.route ===
+    "SYSTEM_ERROR"
+  ){
+
+    badges.push({
+      text:
+        "LỖI HỆ THỐNG",
+
+      cls:
+        "busy"
+    });
+
+  }
+
+
+  if(
+    data?.answer_mode ===
+    "SOURCE_DIRECT"
+  ){
+
+    badges.push({
+      text:
+        "NGUỒN TRỰC TIẾP",
+
+      cls:
+        "direct"
+    });
+
+  }
+  else if(
+    data?.answer_mode ===
+    "GROK"
+  ){
+
+    badges.push({
+      text:
+        "AI TỔNG HỢP",
+
+      cls:
+        "semantic"
+    });
+
+  }
+
+
+  if(
+    data?.retrieval_mode ===
+    "SEMANTIC"
+  ){
+
+    badges.push({
+      text:
+        "NGỮ NGHĨA",
+
+      cls:
+        "semantic"
+    });
+
+  }
+
+
+  if(
+    data?.retrieval_mode ===
+    "KEYWORD_FALLBACK"
+  ){
+
+    badges.push({
+      text:
+        "TỪ KHÓA DỰ PHÒNG",
+
+      cls:
+        "keyword"
+    });
+
+  }
+
+
+  if(
+    data?.model_used
+  ){
+
+    badges.push({
+      text:
+        friendlyModelName(
+          data.model_used
+        ),
+
+      cls:
+        "model"
+    });
+
+  }
+
+
+  return badges;
+
+}
+
+
+// ============================================================
+// SOURCES
+// ============================================================
+
+function buildSourceLabel(
+  source
+){
+
+  return (
+    `${source.document_code || "QT.AV.VH.604"}` +
+    ` • Điều ${source.article_number}` +
+    ` • Trang ${source.page_start}-${source.page_end}`
+  );
+
+}
+
+
+function renderSources(
+  data
+){
+
+  const sources =
+    Array.isArray(
+      data?.sources
+    )
+      ? [...data.sources]
+      : [];
+
+
+  if(
+    !sources.length
+  ){
+
+    return null;
+
+  }
+
+
+  const box =
+    document.createElement(
+      "div"
+    );
+
+  box.className =
+    "sources";
+
+
+  const title =
+    document.createElement(
+      "span"
+    );
+
+  title.className =
+    "sources-title";
+
+  title.textContent =
+    "Nguồn được trích dẫn";
+
+
+  box.appendChild(
+    title
+  );
+
+
+  // Nguồn chính
+  const primary =
+    document.createElement(
+      "div"
+    );
+
+  primary.className =
+    "source-primary";
+
+  primary.textContent =
+    buildSourceLabel(
+      sources[0]
+    );
+
+
+  box.appendChild(
+    primary
+  );
+
+
+  // SOURCE_DIRECT chỉ dùng nguồn đầu tiên
+  if(
+    data?.answer_mode ===
+    "SOURCE_DIRECT"
+  ){
+
+    return box;
+
+  }
+
+
+  // Các nguồn RAG phụ: collapse, không hiện score
+  if(
+    sources.length > 1
+  ){
+
+    const details =
+      document.createElement(
+        "details"
+      );
+
+    details.className =
+      "rag-details";
+
+
+    const summary =
+      document.createElement(
+        "summary"
+      );
+
+    summary.textContent =
+      `Xem ${sources.length - 1} nguồn RAG bổ sung`;
+
+
+    details.appendChild(
+      summary
+    );
+
+
+    sources
+      .slice(1)
+      .forEach(
+        source => {
+
+          const item =
+            document.createElement(
+              "div"
+            );
+
+          item.className =
+            "source-secondary";
+
+          item.textContent =
+            buildSourceLabel(
+              source
+            );
+
+
+          details.appendChild(
+            item
+          );
+
+        }
+      );
+
+
+    box.appendChild(
+      details
+    );
+
+  }
+
+
   return box;
+
 }
-async function copyText(text,button){
+
+
+// ============================================================
+// COPY
+// ============================================================
+
+async function copyText(
+  text,
+  button
+){
+
   try{
-    await navigator.clipboard.writeText(text);
-    const old=button.textContent; button.textContent="Đã sao chép";
-    setTimeout(()=>button.textContent=old,1200);
-  }catch{button.textContent="Không sao chép được"}
-}
-function scrollToMessageTop(element){
-  const chatTop=chat.getBoundingClientRect().top;
-  const elTop=element.getBoundingClientRect().top;
-  chat.scrollBy({top:elTop-chatTop-12,behavior:"smooth"});
-}
-function scrollToBottom(){chat.scrollTop=chat.scrollHeight}
 
-function addUserMessage(text){
-  welcome?.classList.add("compact");
-  const wrap=document.createElement("div"); wrap.className="msg user";
-  const bubble=document.createElement("div"); bubble.className="bubble";
-  const header=document.createElement("div"); header.className="label-row";
-  const label=document.createElement("span"); label.className="label"; label.textContent="Bạn";
-  const time=document.createElement("span"); time.className="time"; time.textContent=currentTime();
-  header.append(label,time);
-  const content=document.createElement("div"); content.className="answer"; content.textContent=text;
-  bubble.append(header,content); wrap.appendChild(bubble); chat.appendChild(wrap); scrollToBottom();
-}
-function addAIMessage(data){
-  welcome?.classList.add("compact");
-  const wrap=document.createElement("div"); wrap.className="msg ai";
-  const bubble=document.createElement("div"); bubble.className="bubble";
-  const header=document.createElement("div"); header.className="label-row";
-  const label=document.createElement("span"); label.className="label"; label.textContent="Trợ lý AI";
-  const time=document.createElement("span"); time.className="time"; time.textContent=currentTime();
-  header.append(label,time); bubble.appendChild(header);
+    await navigator.clipboard.writeText(
+      text
+    );
 
-  const badges=getBadges(data);
-  if(badges.length){
-    const row=document.createElement("div");row.className="meta-row";
-    badges.forEach(x=>{const s=document.createElement("span");s.className=`badge ${x.cls}`;s.textContent=x.text;row.appendChild(s)});
-    bubble.appendChild(row);
+
+    const old =
+      button.textContent;
+
+
+    button.textContent =
+      "Đã sao chép";
+
+
+    setTimeout(
+      () => {
+
+        button.textContent =
+          old;
+
+      },
+      1200
+    );
+
+  }
+  catch{
+
+    button.textContent =
+      "Không sao chép được";
+
   }
 
-  const answerText=data?.answer||"Không có nội dung trả lời.";
-  const answer=document.createElement("div"); answer.className="answer"; answer.innerHTML=renderMarkdown(answerText); bubble.appendChild(answer);
-
-  const src=renderSources(data); if(src)bubble.appendChild(src);
-
-  const actions=document.createElement("div"); actions.className="msg-actions";
-  const copyBtn=document.createElement("button"); copyBtn.className="msg-btn"; copyBtn.textContent="Sao chép";
-  copyBtn.addEventListener("click",()=>copyText(answerText,copyBtn));
-  actions.appendChild(copyBtn); bubble.appendChild(actions);
-
-  wrap.appendChild(bubble); chat.appendChild(wrap);
-  setTimeout(()=>scrollToMessageTop(wrap),30);
 }
+
+
+// ============================================================
+// SCROLL
+// ============================================================
+
+// Khi AI trả lời dài:
+// đưa đầu card trả lời mới vào viewport,
+// không nhảy xuống cuối card
+function scrollToMessageTop(
+  element
+){
+
+  const chatRect =
+    chat.getBoundingClientRect();
+
+
+  const elementRect =
+    element.getBoundingClientRect();
+
+
+  const delta =
+    elementRect.top -
+    chatRect.top -
+    12;
+
+
+  chat.scrollBy({
+    top:
+      delta,
+
+    behavior:
+      "smooth"
+  });
+
+}
+
+
+function scrollToBottom(){
+
+  chat.scrollTop =
+    chat.scrollHeight;
+
+}
+
+
+// ============================================================
+// USER MESSAGE
+// ============================================================
+
+function addUserMessage(
+  text
+){
+
+  if(welcome){
+
+    welcome.classList.add(
+      "hidden"
+    );
+
+  }
+
+
+  const wrap =
+    document.createElement(
+      "div"
+    );
+
+  wrap.className =
+    "msg user";
+
+
+  const bubble =
+    document.createElement(
+      "div"
+    );
+
+  bubble.className =
+    "bubble";
+
+
+  const header =
+    document.createElement(
+      "div"
+    );
+
+  header.className =
+    "label-row";
+
+
+  const label =
+    document.createElement(
+      "span"
+    );
+
+  label.className =
+    "label";
+
+  label.textContent =
+    "Bạn";
+
+
+  const time =
+    document.createElement(
+      "span"
+    );
+
+  time.className =
+    "time";
+
+  time.textContent =
+    currentTime();
+
+
+  header.append(
+    label,
+    time
+  );
+
+
+  const content =
+    document.createElement(
+      "div"
+    );
+
+  content.className =
+    "answer";
+
+  content.textContent =
+    text;
+
+
+  bubble.append(
+    header,
+    content
+  );
+
+
+  wrap.appendChild(
+    bubble
+  );
+
+
+  chat.appendChild(
+    wrap
+  );
+
+
+  scrollToBottom();
+
+}
+
+
+// ============================================================
+// AI MESSAGE
+// ============================================================
+
+function addAIMessage(
+  data
+){
+
+  if(welcome){
+
+    welcome.classList.add(
+      "hidden"
+    );
+
+  }
+
+
+  const wrap =
+    document.createElement(
+      "div"
+    );
+
+  wrap.className =
+    "msg ai";
+
+
+  const bubble =
+    document.createElement(
+      "div"
+    );
+
+  bubble.className =
+    "bubble";
+
+
+  const header =
+    document.createElement(
+      "div"
+    );
+
+  header.className =
+    "label-row";
+
+
+  const label =
+    document.createElement(
+      "span"
+    );
+
+  label.className =
+    "label";
+
+  label.textContent =
+    "Trợ lý AI";
+
+
+  const time =
+    document.createElement(
+      "span"
+    );
+
+  time.className =
+    "time";
+
+  time.textContent =
+    currentTime();
+
+
+  header.append(
+    label,
+    time
+  );
+
+
+  bubble.appendChild(
+    header
+  );
+
+
+  // Badges
+  const badges =
+    getBadges(
+      data
+    );
+
+
+  if(
+    badges.length
+  ){
+
+    const row =
+      document.createElement(
+        "div"
+      );
+
+    row.className =
+      "meta-row";
+
+
+    badges.forEach(
+      badge => {
+
+        const span =
+          document.createElement(
+            "span"
+          );
+
+        span.className =
+          `badge ${badge.cls}`;
+
+        span.textContent =
+          badge.text;
+
+
+        row.appendChild(
+          span
+        );
+
+      }
+    );
+
+
+    bubble.appendChild(
+      row
+    );
+
+  }
+
+
+  // Answer
+  const answerText =
+    data?.answer ||
+    "Không có nội dung trả lời.";
+
+
+  const answer =
+    document.createElement(
+      "div"
+    );
+
+  answer.className =
+    "answer";
+
+  answer.innerHTML =
+    renderMarkdown(
+      answerText
+    );
+
+
+  bubble.appendChild(
+    answer
+  );
+
+
+  // Sources
+  const sources =
+    renderSources(
+      data
+    );
+
+
+  if(sources){
+
+    bubble.appendChild(
+      sources
+    );
+
+  }
+
+
+  // Copy button
+  const actions =
+    document.createElement(
+      "div"
+    );
+
+  actions.className =
+    "msg-actions";
+
+
+  const copyBtn =
+    document.createElement(
+      "button"
+    );
+
+  copyBtn.className =
+    "msg-btn";
+
+  copyBtn.textContent =
+    "Sao chép";
+
+
+  copyBtn.addEventListener(
+    "click",
+    () => {
+
+      copyText(
+        answerText,
+        copyBtn
+      );
+
+    }
+  );
+
+
+  actions.appendChild(
+    copyBtn
+  );
+
+
+  bubble.appendChild(
+    actions
+  );
+
+
+  wrap.appendChild(
+    bubble
+  );
+
+
+  chat.appendChild(
+    wrap
+  );
+
+
+  // Scroll tới đầu câu trả lời mới
+  setTimeout(
+    () => {
+
+      scrollToMessageTop(
+        wrap
+      );
+
+    },
+    30
+  );
+
+}
+
+
+// ============================================================
+// LOADING
+// ============================================================
+
 function showLoading(){
-  const wrap=document.createElement("div"); wrap.className="msg ai"; wrap.id="loadingMsg";
-  const bubble=document.createElement("div");bubble.className="bubble";
-  bubble.innerHTML=`<div class="label-row"><span class="label">Trợ lý AI</span><span class="time">${currentTime()}</span></div>
-  <div class="loading-wrap"><span class="spinner"></span><span class="loading-text">Đang tìm trong tài liệu và chuẩn bị câu trả lời...</span></div>`;
-  wrap.appendChild(bubble);chat.appendChild(wrap);scrollToBottom();
-}
-function hideLoading(){document.getElementById("loadingMsg")?.remove()}
 
-clearBtn.addEventListener("click",()=>{
-  if(!confirm("Xóa toàn bộ hội thoại đang hiển thị?"))return;
-  chat.querySelectorAll(".msg").forEach(m=>m.remove());
-  welcome?.classList.remove("compact");
-  chat.scrollTop=0;question.focus();
-});
-function autoSizeTextarea(){
-  question.style.height="auto";
-  question.style.height=Math.min(question.scrollHeight,130)+"px";
+  const wrap =
+    document.createElement(
+      "div"
+    );
+
+  wrap.className =
+    "msg ai";
+
+  wrap.id =
+    "loadingMsg";
+
+
+  const bubble =
+    document.createElement(
+      "div"
+    );
+
+  bubble.className =
+    "bubble";
+
+
+  bubble.innerHTML = `
+    <div class="label-row">
+
+      <span class="label">
+        Trợ lý AI
+      </span>
+
+      <span class="time">
+        ${currentTime()}
+      </span>
+
+    </div>
+
+    <div class="loading-wrap">
+
+      <span class="spinner"></span>
+
+      <span class="loading-text">
+        Đang tìm trong tài liệu và chuẩn bị câu trả lời...
+      </span>
+
+    </div>
+  `;
+
+
+  wrap.appendChild(
+    bubble
+  );
+
+
+  chat.appendChild(
+    wrap
+  );
+
+
+  scrollToBottom();
+
 }
-question.addEventListener("input",autoSizeTextarea);
+
+
+function hideLoading(){
+
+  document
+    .getElementById(
+      "loadingMsg"
+    )
+    ?.remove();
+
+}
+
+
+// ============================================================
+// CLEAR CHAT
+// ============================================================
+
+clearBtn.addEventListener(
+  "click",
+  () => {
+
+    const ok =
+      confirm(
+        "Xóa toàn bộ hội thoại đang hiển thị?"
+      );
+
+
+    if(!ok){
+
+      return;
+
+    }
+
+
+    chat
+      .querySelectorAll(
+        ".msg"
+      )
+      .forEach(
+        msg => {
+
+          msg.remove();
+
+        }
+      );
+
+
+    if(welcome){
+
+      welcome.classList.remove(
+        "hidden"
+      );
+
+    }
+
+
+    chat.scrollTop =
+      0;
+
+
+    question.focus();
+
+  }
+);
+
+
+// ============================================================
+// TEXTAREA AUTOSIZE
+// ============================================================
+
+function autoSizeTextarea(){
+
+  question.style.height =
+    "auto";
+
+
+  question.style.height =
+    Math.min(
+      question.scrollHeight,
+      130
+    ) + "px";
+
+}
+
+
+question.addEventListener(
+  "input",
+  autoSizeTextarea
+);
+
+
+// ============================================================
+// SEND
+// ============================================================
 
 async function sendQuestion(){
-  const text=question.value.trim();
-  if(!text)return;
-  if(!pocAccessKey){showAccessDialog("Phiên truy cập chưa có mã hợp lệ.");return}
 
-  addUserMessage(text);
-  question.value="";autoSizeTextarea();
-  sendBtn.disabled=true;sendBtn.textContent="Đang gửi...";
+  const text =
+    question.value.trim();
+
+
+  if(!text){
+
+    return;
+
+  }
+
+
+  if(!pocAccessKey){
+
+    showAccessDialog(
+      "Phiên truy cập chưa có mã hợp lệ."
+    );
+
+    return;
+
+  }
+
+
+  addUserMessage(
+    text
+  );
+
+
+  question.value =
+    "";
+
+
+  autoSizeTextarea();
+
+
+  sendBtn.disabled =
+    true;
+
+
+  sendBtn.textContent =
+    "Đang gửi...";
+
+
   showLoading();
 
-  try{
-    const res=await fetch(API_ENDPOINT,{
-      method:"POST",
-      headers:{"Content-Type":"application/json",[ACCESS_HEADER]:pocAccessKey},
-      body:JSON.stringify({question:text})
-    });
-    const data=await res.json().catch(()=>({}));
 
-    if(res.status===401){
-      hideLoading();
-      sessionStorage.removeItem("av_poc_key");
-      pocAccessKey="";
-      showAccessDialog("Mã truy cập không đúng hoặc đã thay đổi.");
-      return;
+  try{
+
+    const response =
+      await fetch(
+        API_ENDPOINT,
+        {
+
+          method:
+            "POST",
+
+          headers: {
+
+            "Content-Type":
+              "application/json",
+
+            // ĐÚNG backend V4:
+            [ACCESS_HEADER]:
+              pocAccessKey
+
+          },
+
+          body:
+            JSON.stringify({
+              question:
+                text
+            })
+
+        }
+      );
+
+
+    let data =
+      {};
+
+
+    try{
+
+      data =
+        await response.json();
+
     }
-    if(!res.ok)throw new Error(data?.error||`HTTP ${res.status}`);
-    hideLoading();addAIMessage(data);
-  }catch(error){
+    catch{
+
+      data =
+        {};
+
+    }
+
+
+    // Sai access key
+    if(
+      response.status ===
+      401
+    ){
+
+      hideLoading();
+
+
+      sessionStorage.removeItem(
+        "av_poc_key"
+      );
+
+
+      pocAccessKey =
+        "";
+
+
+      showAccessDialog(
+        "Mã truy cập không đúng hoặc đã thay đổi."
+      );
+
+
+      return;
+
+    }
+
+
+    if(
+      !response.ok
+    ){
+
+      throw new Error(
+        data?.error ||
+        `HTTP ${response.status}`
+      );
+
+    }
+
+
     hideLoading();
-    addAIMessage({route:"SYSTEM_ERROR",answer_mode:"RULE",answer:`Hệ thống gặp lỗi khi gửi yêu cầu: ${error.message}`,sources:[]});
-  }finally{
-    sendBtn.disabled=false;sendBtn.textContent="Gửi câu hỏi";question.focus();
+
+
+    addAIMessage(
+      data
+    );
+
   }
+  catch(error){
+
+    hideLoading();
+
+
+    addAIMessage({
+
+      route:
+        "SYSTEM_ERROR",
+
+      answer_mode:
+        "RULE",
+
+      answer:
+        `### Lỗi hệ thống
+
+${error.message || "Không thể kết nối tới dịch vụ."}
+
+- Kiểm tra kết nối Internet.
+- Thử gửi lại sau vài giây.
+- Nếu vẫn lỗi, đổi mã truy cập hoặc liên hệ quản trị hệ thống.`,
+
+      sources:
+        []
+
+    });
+
+  }
+  finally{
+
+    sendBtn.disabled =
+      false;
+
+
+    sendBtn.textContent =
+      "Gửi câu hỏi";
+
+
+    question.focus();
+
+  }
+
 }
 
-sendBtn.addEventListener("click",sendQuestion);
-question.addEventListener("keydown",e=>{
-  if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendQuestion()}
-});
+
+// ============================================================
+// EVENTS
+// ============================================================
+
+sendBtn.addEventListener(
+  "click",
+  sendQuestion
+);
+
+
+question.addEventListener(
+  "keydown",
+  event => {
+
+    if(
+      event.key ===
+        "Enter" &&
+      !event.shiftKey
+    ){
+
+      event.preventDefault();
+
+      sendQuestion();
+
+    }
+
+  }
+);
+
 </script>
+
 </body>
 </html>
